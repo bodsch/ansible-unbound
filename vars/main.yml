@@ -71,10 +71,10 @@ unbound_config_defaults:
 
   cachedb: {}
 
-  certs:
-    server:
-      key_file: "{{ unbound_conf_dir }}/unbound_server.key"
-      cert_file: "{{ unbound_conf_dir }}/unbound_server.pem"
-    control:
-      key_file: "{{ unbound_conf_dir }}/unbound_control.key"
-      cert_file: "{{ unbound_conf_dir }}/unbound_control.pem"
+  # certs:
+  #   server:
+  #     key_file: "{{ unbound_conf_dir }}/unbound_server.key"
+  #     cert_file: "{{ unbound_conf_dir }}/unbound_server.pem"
+  #   control:
+  #     key_file: "{{ unbound_conf_dir }}/unbound_control.key"
+  #     cert_file: "{{ unbound_conf_dir }}/unbound_control.pem"
