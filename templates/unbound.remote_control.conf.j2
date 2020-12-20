@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+# remote_control
+
+{% if unbound_config.remote_control is defined and unbound_config.remote_control | count != 0 -%}
+remote-control:
+{% for k, v in unbound_config.remote_control.items() %}
+  {{ k }}: {{ v }}
+{% endfor %}
+{% endif -%}

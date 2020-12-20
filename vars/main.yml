@@ -1,0 +1,37 @@
+---
+
+_unbound_dependencies:
+  default: []
+  debian:
+    - dnsutils
+
+_unbound_environment_file:
+  default: /etc/default/unbound
+  debian: /etc/default/unbound
+  redhat: /etc/sysconfig/unbound
+
+_unbound_flags: ''
+
+
+unbound_dependencies: "{{
+          _unbound_dependencies[ansible_os_family | lower~ '-' ~ ansible_distribution_major_version] |
+  default(_unbound_dependencies[ansible_os_family | lower] |
+  default(_unbound_dependencies[ansible_distribution | lower~ '-' ~ ansible_distribution_major_version] |
+  default(_unbound_dependencies[ansible_distribution | lower] |
+  default(_unbound_dependencies['default'])))) }}"
+
+unbound_environment_file: "{{
+          _unbound_environment_file[ansible_os_family | lower] |
+  default(_unbound_environment_file['default']) }}"
+
+unbound_config_defaults:
+  server: {}
+  forward_zone: {}
+  remote_control: {}
+  certs:
+    server:
+      key_file: "{{ unbound_conf_dir }}/unbound_server.key"
+      cert_file: "{{ unbound_conf_dir }}/unbound_server.pem"
+    control:
+      key_file: "{{ unbound_conf_dir }}/unbound_control.key"
+      cert_file: "{{ unbound_conf_dir }}/unbound_control.pem"

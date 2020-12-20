@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+# cachedb
+
+{% if unbound_config.cachedb is defined and unbound_config.cachedb | count != 0 -%}
+cachedb:
+{% for k, v in unbound_config.cachedb.items() %}
+  {{ k }}: {{ v }}
+{% endfor %}
+{% endif -%}

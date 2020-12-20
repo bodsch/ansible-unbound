@@ -1,0 +1,13 @@
+---
+unbound_user: unbound
+unbound_group: unbound
+
+unbound_conf_dir: /etc/unbound
+
+unbound_config:
+  server: {}
+  forward_zone: {}
+  remote_control: {}
+  certs:
+    server: {}
+    control: {}

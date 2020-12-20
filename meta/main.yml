@@ -1,0 +1,28 @@
+---
+galaxy_info:
+  role_name: unbound
+  author: Bodo Schulz
+  description: ansible role to install unbound
+  license: BSD
+  min_ansible_version: 2.4
+  platforms:
+    - name: Ubuntu
+      versions:
+        # 18.04
+        - bionic
+        # 20.04
+        - focal
+    - name: Debian
+      versions:
+        # 9
+        - etch
+        # 10
+        - buster
+    - name: EL
+      versions:
+        - 7
+        - 8
+
+  galaxy_tags:
+    - dns
+    - unbound

@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+# server
+
+{% if unbound_config.server is defined and unbound_config.server | count != 0 -%}
+server:
+{% for k, v in unbound_config.server.items() %}
+{% if k == 'access-control' %}
+{% for vv in v %}
+  access-control: {{ vv }}
+{% endfor %}
+{% elif k == 'local-zone' %}
+{% for vv in v %}
+  local-zone: {{ vv }}
+{% endfor %}
+{% elif k == 'local-data' %}
+{% for vv in v %}
+  local-data: {{ vv }}
+{% endfor %}
+{% else %}
+  {{ k }}: {{ v }}
+{% endif %}
+{% endfor %}
+{% endif -%}

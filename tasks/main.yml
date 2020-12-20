@@ -1,0 +1,116 @@
+---
+
+- name: install unbound
+  package:
+    name: unbound
+    state: present
+
+- name: install dependencies
+  package:
+    name: "{{ unbound_dependencies }}"
+    state: present
+
+- name: merge config between defaults and custom
+  set_fact:
+    unbound_config: "{{ unbound_config_defaults |
+      combine( unbound_config, recursive=True ) }}"
+
+- name: create {{ unbound_environment_file }}
+  template:
+    src: unbound.default.j2
+    dest: "{{ unbound_environment_file }}"
+    mode: 0644
+    backup: true
+    validate: sh -n %s
+  notify: restart unbound
+
+- name: create key file
+  become_user: "{{ unbound_user }}"
+  command: "unbound-control-setup -d {{ unbound_conf_dir }}"
+  args:
+    creates: "{{ unbound_config.certs.server.key_file }}"
+
+- name: do chgrp unbound_group all keys
+  file:
+    mode: 0640
+    owner: root
+    group: "{{ unbound_group }}"
+    path: "{{ item }}"
+  loop:
+    - "{{ unbound_config.certs.server.key_file }}"
+    - "{{ unbound_config.certs.server.cert_file }}"
+    - "{{ unbound_config.certs.control.key_file }}"
+    - "{{ unbound_config.certs.control.cert_file }}"
+
+- name: get root.hints
+  get_url:
+    url: https://www.internic.net/domain/named.cache
+    dest: /etc/unbound/root.hints
+  register: _download_archive
+  until: _download_archive is succeeded
+  retries: 5
+  delay: 2
+
+- name: unbound.log handling
+  block:
+    - name: test existing unbound.log
+      stat:
+        path: "{{ unbound_config.server.logfile }}"
+        get_mime: true
+      register: __unbound_logfile_exists
+
+    - name: create unbound.log
+      file:
+        name: "{{ unbound_config.server.logfile }}"
+        state: touch
+        owner: "{{ unbound_user }}"
+        group: "{{ unbound_group }}"
+        mode: 0666
+      when:
+        - not __unbound_logfile_exists.stat.exists
+
+  when:
+    - unbound_config.server.logfile is defined
+    - unbound_config.server.logfile | length != 0
+
+
+- name: create unbound configuration | server.conf
+  template:
+    src: unbound.server.conf.j2
+    dest: "{{ unbound_conf_dir }}/unbound.conf.d/server.conf"
+    group: "{{ unbound_group }}"
+    mode: 0666
+    validate: "unbound-checkconf %s"
+  notify: restart unbound
+
+- name: create unbound configuration | remote_control.conf
+  template:
+    src: unbound.remote_control.conf.j2
+    dest: "{{ unbound_conf_dir }}/unbound.conf.d/remote_control.conf"
+    group: "{{ unbound_group }}"
+    mode: 0666
+    validate: "unbound-checkconf %s"
+  notify: restart unbound
+
+- name: create unbound configuration | forward_zone.conf
+  template:
+    src: unbound.forward_zone.conf.j2
+    dest: "{{ unbound_conf_dir }}/unbound.conf.d/forward_zone.conf"
+    group: "{{ unbound_group }}"
+    mode: 0666
+    validate: "unbound-checkconf %s"
+  notify: restart unbound
+
+- name: create unbound configuration | cache_db.conf
+  template:
+    src: unbound.cache_db.conf.j2
+    dest: "{{ unbound_conf_dir }}/unbound.conf.d/cache_db.conf"
+    group: "{{ unbound_group }}"
+    mode: 0666
+    validate: "unbound-checkconf %s"
+  notify: restart unbound
+
+# - name: enable unbound
+#   service:
+#     name: unbound
+#     enabled: true
