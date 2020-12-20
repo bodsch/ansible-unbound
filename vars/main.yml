@@ -51,7 +51,6 @@ unbound_config_defaults:
     unwanted-reply-threshold: 10000
     ipsecmod-enabled: 'no'
 
-
   forward_zone:
     name: "."
     # definitely censor free & log free with DNSSEC Support:
@@ -66,8 +65,8 @@ unbound_config_defaults:
   remote_control:
     server-key-file: "{{ unbound_certs.server.key_file }}"
     server-cert-file: "{{ unbound_certs.server.cert_file }}"
-    control-key-file: "{{ unbound_certs.server.control.key_file }}"
-    control-cert-file: "{{ unbound_certs.server.control.cert_file }}"
+    control-key-file: "{{ unbound_certs.control.key_file }}"
+    control-cert-file: "{{ unbound_certs.control.cert_file }}"
 
   cachedb: {}
 
