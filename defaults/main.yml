@@ -9,7 +9,3 @@ unbound_config:
   forward_zone: {}
   remote_control: {}
   cachedb: {}
-
-  # certs:
-  #   server: {}
-  #   control: {}

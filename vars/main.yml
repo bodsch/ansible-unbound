@@ -64,17 +64,17 @@ unbound_config_defaults:
       - 89.233.43.71   # censurfridns.dk
 
   remote_control:
-    server-key-file: "{{ unbound_conf_dir }}/unbound_server.key"
-    server-cert-file: "{{ unbound_conf_dir }}/unbound_server.pem"
-    control-key-file: "{{ unbound_conf_dir }}/unbound_control.key"
-    control-cert-file: "{{ unbound_conf_dir }}/unbound_control.pem"
+    server-key-file: "{{ unbound_certs.server.key_file }}"
+    server-cert-file: "{{ unbound_certs.server.cert_file }}"
+    control-key-file: "{{ unbound_certs.server.control.key_file }}"
+    control-cert-file: "{{ unbound_certs.server.control.cert_file }}"
 
   cachedb: {}
 
-  # certs:
-  #   server:
-  #     key_file: "{{ unbound_conf_dir }}/unbound_server.key"
-  #     cert_file: "{{ unbound_conf_dir }}/unbound_server.pem"
-  #   control:
-  #     key_file: "{{ unbound_conf_dir }}/unbound_control.key"
-  #     cert_file: "{{ unbound_conf_dir }}/unbound_control.pem"
+unbound_certs:
+  server:
+    key_file: "{{ unbound_conf_dir }}/unbound_server.key"
+    cert_file: "{{ unbound_conf_dir }}/unbound_server.pem"
+  control:
+    key_file: "{{ unbound_conf_dir }}/unbound_control.key"
+    cert_file: "{{ unbound_conf_dir }}/unbound_control.pem"

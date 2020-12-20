@@ -28,7 +28,7 @@
   become_user: "{{ unbound_user }}"
   command: "unbound-control-setup -d {{ unbound_conf_dir }}"
   args:
-    creates: "{{ unbound_config.remote_control.server-key-file }}"
+    creates: "{{ unbound_certs.server.key_file }}"
 
 - name: do chgrp unbound_group all keys
   file:
@@ -37,10 +37,10 @@
     group: "{{ unbound_group }}"
     path: "{{ item }}"
   loop:
-    - "{{ unbound_config.remote_control.server-key-file }}"
-    - "{{ unbound_config.remote_control.server-cert-file }}"
-    - "{{ unbound_config.remote_control.control-key-file }}"
-    - "{{ unbound_config.remote_control.control-cert-file }}"
+    - "{{ unbound_certs.server.key_file }}"
+    - "{{ unbound_certs.server.cert_file }}"
+    - "{{ unbound_certs.control.key_file }}"
+    - "{{ unbound_certs.control.cert_file }}"
 
 - name: get root.hints
   get_url:
