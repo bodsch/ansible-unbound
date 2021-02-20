@@ -1,5 +1,63 @@
 
-install and configure unbound
+install and configure [unbound](https://www.nlnetlabs.nl/projects/unbound/about/)
+
+
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bodsch/ansible-unbound/CI/master)][ci]
+[![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-unbound)][issues]
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/bodsch/ansible-unbound)][releases]
+
+[ci]: https://github.com/bodsch/ansible-unbound/actions
+[issues]: https://github.com/bodsch/ansible-unbound/issues?q=is%3Aopen+is%3Aissue
+[releases]: https://github.com/bodsch/ansible-unbound/releases
+
+
+## Requirements & Dependencies
+
+
+### Operating systems
+
+Tested on
+
+* Debian 9 / 10
+* CentOS 8
+* OracleLinux 8
+
+## Role Variables
+
+```
+unbound_user: unbound
+unbound_group: unbound
+
+unbound_conf_dir: /etc/unbound
+```
+
+### server
+```
+unbound_config:
+  server: {}
+```
+
+### forward zone
+```
+unbound_config:
+  forward_zone: {}
+```
+
+### remote control
+```
+unbound_config:
+  remote_control: {}
+```
+
+## cachedb
+```
+unbound_config:
+  cachedb: {}
+```
+
+Role Variables will be merged with [defaults](vars/main.yml) (see below under *default vars*)
+
+
 
 ## default vars
 
@@ -31,7 +89,6 @@ unbound_config_defaults:
     unwanted-reply-threshold: 10000
     ipsecmod-enabled: 'no'
 
-
   forward_zone:
     name: "."
     # definitely censor free & log free with DNSSEC Support:
@@ -58,5 +115,17 @@ unbound_config_defaults:
       cert_file: "{{ unbound_conf_dir }}/unbound_control.pem"
 
   cachedb: {}
+```
+
+
+## tests
+
+for testing
 
 ```
+$ tox -e py38-ansible29 -- molecule test
+```
+
+## License
+
+[BSD](https://raw.githubusercontent.com/bodsch/ansible-unbound/master/LICENSE)
