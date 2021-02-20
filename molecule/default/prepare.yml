@@ -12,5 +12,10 @@
           - "ansible version      : {{ ansible_version.full }}"
           - "python version       : {{ ansible_python.version.major }}"
 
+    - block:
+        - name: Install required packages on Debian
+          apt:
+            update_cache: true
+
   roles:
     - role: redis
