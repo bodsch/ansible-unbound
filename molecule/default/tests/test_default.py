@@ -85,10 +85,21 @@ def test_files(host, files):
 
 
 def test_user(host):
+    """
+      test service user
+    """
+    shell = "/usr/sbin/nologin"
+
+    distribution = host.system_info.distribution
+    release = host.system_info.release
+
+    if(distribution == 'debian' and release.startswith('9')):
+        shell = "/bin/false"
+
     assert host.group("unbound").exists
     assert host.user("unbound").exists
     assert "unbound" in host.user("unbound").groups
-    assert host.user("unbound").shell == "/usr/sbin/nologin"
+    assert host.user("unbound").shell == shell
     assert host.user("unbound").home == "/var/lib/unbound"
 
 

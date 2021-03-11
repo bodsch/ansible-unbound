@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: unbound
+  namespace: bodsch
   author: Bodo Schulz
   description: ansible role to install unbound
   license: BSD
