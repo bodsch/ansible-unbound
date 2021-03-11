@@ -1,0 +1,59 @@
+---
+
+- name: "create {{ unbound_conf_dir }}/unbound.conf.d directory"
+  file:
+    path: "{{ unbound_conf_dir }}/unbound.conf.d"
+    state: directory
+    owner: root
+    group: "{{ unbound_group }}"
+    mode: 0640
+
+- name: create server.conf
+  template:
+    src: unbound.server.conf.j2
+    dest: "{{ unbound_conf_dir }}/unbound.conf.d/server.conf"
+    group: "{{ unbound_group }}"
+    mode: 0666
+    backup: true
+    # validate: "unbound-checkconf %s"
+  notify: restart unbound
+
+- name: create remote_control.conf
+  template:
+    src: unbound.remote_control.conf.j2
+    dest: "{{ unbound_conf_dir }}/unbound.conf.d/remote_control.conf"
+    group: "{{ unbound_group }}"
+    mode: 0666
+    backup: true
+    validate: "unbound-checkconf %s"
+  notify: restart unbound
+
+- name: create forward_zone.conf
+  template:
+    src: unbound.forward_zone.conf.j2
+    dest: "{{ unbound_conf_dir }}/unbound.conf.d/forward_zone.conf"
+    group: "{{ unbound_group }}"
+    mode: 0666
+    backup: true
+    validate: "unbound-checkconf %s"
+  notify: restart unbound
+
+- name: create cache_db.conf
+  template:
+    src: unbound.cache_db.conf.j2
+    dest: "{{ unbound_conf_dir }}/unbound.conf.d/cache_db.conf"
+    group: "{{ unbound_group }}"
+    mode: 0666
+    backup: true
+    validate: "unbound-checkconf %s"
+  notify: restart unbound
+
+- name: create unbound configuration
+  template:
+    src: unbound.conf.j2
+    dest: "{{ unbound_conf_dir }}/unbound.conf"
+    group: "{{ unbound_group }}"
+    mode: 0666
+    backup: true
+    validate: "unbound-checkconf %s"
+  notify: restart unbound

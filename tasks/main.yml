@@ -67,46 +67,11 @@
         mode: 0666
       when:
         - not __unbound_logfile_exists.stat.exists
-
   when:
     - unbound_config.server.logfile is defined
     - unbound_config.server.logfile | length != 0
 
-- name: create unbound configuration | server.conf
-  template:
-    src: unbound.server.conf.j2
-    dest: "{{ unbound_conf_dir }}/unbound.conf.d/server.conf"
-    group: "{{ unbound_group }}"
-    mode: 0666
-    validate: "unbound-checkconf %s"
-  notify: restart unbound
-
-- name: create unbound configuration | remote_control.conf
-  template:
-    src: unbound.remote_control.conf.j2
-    dest: "{{ unbound_conf_dir }}/unbound.conf.d/remote_control.conf"
-    group: "{{ unbound_group }}"
-    mode: 0666
-    validate: "unbound-checkconf %s"
-  notify: restart unbound
-
-- name: create unbound configuration | forward_zone.conf
-  template:
-    src: unbound.forward_zone.conf.j2
-    dest: "{{ unbound_conf_dir }}/unbound.conf.d/forward_zone.conf"
-    group: "{{ unbound_group }}"
-    mode: 0666
-    validate: "unbound-checkconf %s"
-  notify: restart unbound
-
-- name: create unbound configuration | cache_db.conf
-  template:
-    src: unbound.cache_db.conf.j2
-    dest: "{{ unbound_conf_dir }}/unbound.conf.d/cache_db.conf"
-    group: "{{ unbound_group }}"
-    mode: 0666
-    validate: "unbound-checkconf %s"
-  notify: restart unbound
+- include_tasks: configure.yml
 
 - name: enable unbound service
   service:
