@@ -42,13 +42,6 @@
         get_mime: true
       register: __unbound_logfile_exists
 
-    # - name: debug
-    #   debug:
-    #     msg:
-    #       - "{{ __unbound_logfile_exists.stat }}"
-    #       - "{{ unbound_config_server.logfile }}"
-    #       - "{{ unbound_config_server.logfile | dirname }}"
-
     - name: create unbound.log
       file:
         name: "{{ unbound_config_server.logfile }}"
@@ -64,9 +57,16 @@
 
 - include_tasks: configure.yml
 
-# - name: enable unbound service
-#   service:
-#     name: unbound
-#     enabled: true
-#     state: started
-#
+- name: disable systemd-resolved
+  service:
+    name: systemd-resolved
+    state: stopped
+    enabled: false
+  when:
+    - ansible_service_mgr == 'systemd'
+
+- name: enable unbound service
+  service:
+    name: unbound
+    enabled: true
+    state: started
