@@ -1,66 +1,57 @@
 ---
 
-- name: install unbound
-  package:
-    name: unbound
-    state: present
+- include_tasks: prepare.yml
 
 - name: install dependencies
   package:
     name: "{{ unbound_dependencies }}"
     state: present
 
-- name: merge config between defaults and custom
-  set_fact:
-    unbound_config: "{{ unbound_config_defaults |
-      combine( unbound_config, recursive=True ) }}"
+- name: install unbound
+  package:
+    name: unbound
+    state: present
 
-- name: create {{ unbound_environment_file }}
-  template:
-    src: unbound.default.j2
-    dest: "{{ unbound_environment_file }}"
-    mode: 0644
-    backup: true
-    validate: sh -n %s
-  notify: restart unbound
+# - include_tasks: chroot.yml
 
-- name: create key file
-  command: "unbound-control-setup -d {{ unbound_conf_dir }}"
-  args:
-    creates: "{{ unbound_certs.server.key_file }}"
+- name: test existing root.key
+  stat:
+    path: "/var/lib/unbound/root.key"
+    get_mime: true
+  register: __unbound_rootkey_exists
 
-- name: do chgrp unbound_group all keys
+- name: create root.key
+  command: /usr/lib/unbound/package-helper root_trust_anchor_update
+  when:
+    - ansible_os_family | lower == 'debian'
+    - not __unbound_rootkey_exists.stat.exists
+
+- name: remove distribution config files
   file:
-    mode: 0640
-    owner: root
-    group: "{{ unbound_group }}"
-    path: "{{ item }}"
+    path: "{{ unbound_conf_dir }}/unbound.conf.d/{{ item }}"
+    state: absent
   loop:
-    - "{{ unbound_certs.server.key_file }}"
-    - "{{ unbound_certs.server.cert_file }}"
-    - "{{ unbound_certs.control.key_file }}"
-    - "{{ unbound_certs.control.cert_file }}"
-
-- name: get root.hints
-  get_url:
-    url: https://www.internic.net/domain/named.cache
-    dest: /etc/unbound/root.hints
-  register: _download_archive
-  until: _download_archive is succeeded
-  retries: 5
-  delay: 2
+    - qname-minimisation.conf
+    - root-auto-trust-anchor-file.conf
 
 - name: unbound.log handling
   block:
     - name: test existing unbound.log
       stat:
-        path: "{{ unbound_config.server.logfile }}"
+        path: "/{{ unbound_config_server.logfile }}"
         get_mime: true
       register: __unbound_logfile_exists
 
+    # - name: debug
+    #   debug:
+    #     msg:
+    #       - "{{ __unbound_logfile_exists.stat }}"
+    #       - "{{ unbound_config_server.logfile }}"
+    #       - "{{ unbound_config_server.logfile | dirname }}"
+
     - name: create unbound.log
       file:
-        name: "{{ unbound_config.server.logfile }}"
+        name: "{{ unbound_config_server.logfile }}"
         state: touch
         owner: "{{ unbound_user }}"
         group: "{{ unbound_group }}"
@@ -68,13 +59,14 @@
       when:
         - not __unbound_logfile_exists.stat.exists
   when:
-    - unbound_config.server.logfile is defined
-    - unbound_config.server.logfile | length != 0
+    - unbound_config_server.logfile is defined
+    - unbound_config_server.logfile | length != 0
 
 - include_tasks: configure.yml
 
-- name: enable unbound service
-  service:
-    name: unbound
-    enabled: true
-    state: started
+# - name: enable unbound service
+#   service:
+#     name: unbound
+#     enabled: true
+#     state: started
+#
