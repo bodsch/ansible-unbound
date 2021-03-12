@@ -95,7 +95,7 @@
     # validate: "unbound-checkconf %s"
   notify: restart unbound
 
-- name: check configuration
+- name: check configuration  # noqa no-changed-when
   command: unbound-checkconf {{ unbound_conf_dir }}/unbound.conf
   register: __configuration_check
 
