@@ -1,0 +1,26 @@
+---
+
+- name: merge config between defaults and custom for server.conf
+  set_fact:
+    unbound_config_server: "{{ unbound_config_server_defaults |
+      combine( unbound_config_server, recursive=True ) }}"
+
+- name: merge config between defaults and custom for remote_control.conf
+  set_fact:
+    unbound_config_remote_control: "{{ unbound_config_remote_control_defaults |
+      combine( unbound_config_remote_control, recursive=True ) }}"
+
+- name: merge config between defaults and custom for cachedb.conf
+  set_fact:
+    unbound_config_cachedb: "{{ unbound_config_cachedb_defaults |
+      combine( unbound_config_cachedb, recursive=True ) }}"
+
+- name: merge config between defaults and custom for forward_zone.conf
+  set_fact:
+    unbound_config_forward_zone: "{{ unbound_config_forward_zone_defaults |
+      combine( unbound_config_forward_zone, recursive=True ) }}"
+
+- name: merge config between defaults and custom for stub_zone.conf
+  set_fact:
+    unbound_config_stub_zone: "{{ unbound_config_stub_zone_defaults |
+      combine( unbound_config_stub_zone, recursive=True ) }}"
