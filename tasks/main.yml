@@ -64,9 +64,16 @@
 
 - include_tasks: configure.yml
 
-# - name: enable unbound service
-#   service:
-#     name: unbound
-#     enabled: true
-#     state: started
-#
+- name: disable systemd-resolved
+  service:
+    name: systemd-resolved
+    state: stopped
+    enabled: false
+  when:
+    - ansible_service_mgr == 'systemd'
+
+- name: enable unbound service
+  service:
+    name: unbound
+    enabled: true
+    state: started
