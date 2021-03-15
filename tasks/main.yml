@@ -42,6 +42,13 @@
         get_mime: true
       register: __unbound_logfile_exists
 
+    # - name: debug
+    #   debug:
+    #     msg:
+    #       - "{{ __unbound_logfile_exists.stat }}"
+    #       - "{{ unbound_config_server.logfile }}"
+    #       - "{{ unbound_config_server.logfile | dirname }}"
+
     - name: create unbound.log
       file:
         name: "{{ unbound_config_server.logfile }}"
