@@ -2,13 +2,16 @@
 install and configure [unbound](https://www.nlnetlabs.nl/projects/unbound/about/)
 
 
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-unbound/main.yml?branch=main)][ci]
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bodsch/ansible-unbound/CI/master)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-unbound)][issues]
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/bodsch/ansible-unbound)][releases]
+[![Ansible Quality Score](https://img.shields.io/ansible/quality/50067?label=role%20quality)][quality]
 
 [ci]: https://github.com/bodsch/ansible-unbound/actions
 [issues]: https://github.com/bodsch/ansible-unbound/issues?q=is%3Aopen+is%3Aissue
 [releases]: https://github.com/bodsch/ansible-unbound/releases
+[quality]: https://galaxy.ansible.com/bodsch/unbound
 
 
 ## Requirements & Dependencies
@@ -18,9 +21,9 @@ install and configure [unbound](https://www.nlnetlabs.nl/projects/unbound/about/
 
 Tested on
 
-* Debian 9 / 10
-* CentOS 8
-* OracleLinux 8
+* Debian based
+    - Debian 10 / 11
+    - Ubuntu 20.10
 
 ## Role Variables
 
@@ -118,13 +121,13 @@ unbound_config_defaults:
 ```
 
 
-## tests
 
-for testing
 
-```
-$ tox -e py38-ansible29 -- molecule test
-```
+---
+
+## Author
+
+- Bodo Schulz
 
 ## License
 

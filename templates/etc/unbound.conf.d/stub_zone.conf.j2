@@ -1,3 +1,4 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
 # {{ ansible_managed }}
 # stub_zone
 
@@ -15,6 +16,7 @@ stub-zone:
 
 {% endif %}
 
+{#
 # Stub zones.
 # Create entries like below, to make all queries for 'example.com' and
 # 'example.org' go to the given list of nameservers. list zero or more
@@ -36,3 +38,4 @@ stub-zone:
 # You can now also dynamically create and delete stub-zone's using
 # unbound-control stub_add domain.com 1.2.3.4 5.6.7.8
 # unbound-control stub_remove domain.com 1.2.3.4 5.6.7.8
+#}

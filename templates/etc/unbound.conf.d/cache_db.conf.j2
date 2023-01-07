@@ -1,3 +1,4 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
 # {{ ansible_managed }}
 # cachedb
 
@@ -8,6 +9,7 @@ cachedb:
 {% endfor %}
 {% endif -%}
 
+{#
 # CacheDB
 # Enable external backend DB as auxiliary cache.  Specify the backend name
 # (default is "testframe", which has no use other than for debugging and
@@ -24,3 +26,4 @@ cachedb:
 #     redis-server-port: 6379
 #     # timeout (in ms) for communication with the redis server
 #     redis-timeout: 100
+#}

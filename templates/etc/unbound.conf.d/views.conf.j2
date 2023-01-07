@@ -1,3 +1,8 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+# views
+
+{#
 # Views
 # Create named views. Name must be unique. Map views to requests using
 # the access-control-view option. Views can contain zero or more local-zone
@@ -14,3 +19,4 @@
 # view:
 #       name: "anotherview"
 #       local-zone: "example.com" refuse
+#}

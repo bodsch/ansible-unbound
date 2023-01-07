@@ -3,12 +3,13 @@
 # DNS_ROOT_KEY_FILE="/usr/share/dns/root.key" -> ROOT_TRUST_ANCHOR_FILE="/var/lib/unbound/root.key"
 
 - name: create key file
-  command: "unbound-control-setup -d {{ unbound_conf_dir }}"
+  ansible.builtin.command: |
+    unbound-control-setup -d {{ unbound_conf_dir }}
   args:
     creates: "{{ unbound_certs.server.key_file }}"
 
 - name: create {{ unbound_environment_file }}
-  template:
+  ansible.builtin.template:
     src: etc/default.j2
     dest: "{{ unbound_environment_file }}"
     mode: 0644
@@ -17,9 +18,9 @@
   notify: restart unbound
 
 - name: do chgrp unbound_group all keys
-  file:
-    mode: 0640
-    owner: root
+  ansible.builtin.file:
+    mode: 0660
+    owner: "{{ unbound_user }}"
     group: "{{ unbound_group }}"
     path: "{{ item }}"
   loop:
@@ -29,26 +30,30 @@
     - "{{ unbound_certs.control.cert_file }}"
 
 - name: get root.hints
-  get_url:
+  ansible.builtin.get_url:
     url: https://www.internic.net/domain/named.cache
     dest: "/etc/unbound/root.hints"
+    owner: "{{ unbound_user }}"
+    group: "{{ unbound_group }}"
+    mode: 0660
   register: _download_archive
   until: _download_archive is succeeded
   retries: 5
   delay: 2
 
 - name: "create {{ unbound_conf_dir }}/unbound.conf.d directory"
-  file:
+  ansible.builtin.file:
     path: "{{ unbound_conf_dir }}/unbound.conf.d"
     state: directory
-    owner: root
+    owner: "{{ unbound_user }}"
     group: "{{ unbound_group }}"
-    mode: 0640
+    mode: 0660
 
 - name: create server.conf
-  template:
+  ansible.builtin.template:
     src: etc/unbound.conf.d/server.conf.j2
     dest: "{{ unbound_conf_dir }}/unbound.conf.d/server.conf"
+    owner: "{{ unbound_user }}"
     group: "{{ unbound_group }}"
     mode: 0666
     backup: true
@@ -56,9 +61,10 @@
   notify: restart unbound
 
 - name: create remote_control.conf
-  template:
+  ansible.builtin.template:
     src: etc/unbound.conf.d/remote_control.conf.j2
     dest: "{{ unbound_conf_dir }}/unbound.conf.d/remote_control.conf"
+    owner: "{{ unbound_user }}"
     group: "{{ unbound_group }}"
     mode: 0666
     backup: true
@@ -66,9 +72,10 @@
   notify: restart unbound
 
 - name: create forward_zone.conf
-  template:
+  ansible.builtin.template:
     src: etc/unbound.conf.d/forward_zone.conf.j2
     dest: "{{ unbound_conf_dir }}/unbound.conf.d/forward_zone.conf"
+    owner: "{{ unbound_user }}"
     group: "{{ unbound_group }}"
     mode: 0666
     backup: true
@@ -76,9 +83,10 @@
   notify: restart unbound
 
 - name: create cache_db.conf
-  template:
+  ansible.builtin.template:
     src: etc/unbound.conf.d/cache_db.conf.j2
     dest: "{{ unbound_conf_dir }}/unbound.conf.d/cache_db.conf"
+    owner: "{{ unbound_user }}"
     group: "{{ unbound_group }}"
     mode: 0666
     backup: true
@@ -86,9 +94,10 @@
   notify: restart unbound
 
 - name: create unbound configuration
-  template:
-    src: etc/unbound.conf.d/unbound.conf.j2
+  ansible.builtin.template:
+    src: etc/unbound.conf.j2
     dest: "{{ unbound_conf_dir }}/unbound.conf"
+    owner: "{{ unbound_user }}"
     group: "{{ unbound_group }}"
     mode: 0666
     backup: true
@@ -96,11 +105,12 @@
   notify: restart unbound
 
 - name: check configuration  # noqa no-changed-when
-  command: unbound-checkconf {{ unbound_conf_dir }}/unbound.conf
+  ansible.builtin.command: ¹
+    unbound-checkconf {{ unbound_conf_dir }}/unbound.conf
   register: __configuration_check
 
 - name: configuration error
-  debug:
+  ansible.builtin.debug:
     msg: "{{ __configuration_check.stderr_lines }}"
   when:
     - not __configuration_check.rc | int == 0

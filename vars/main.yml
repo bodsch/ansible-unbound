@@ -1,40 +1,17 @@
 ---
 
-_unbound_dependencies:
-  default: []
-  debian:
-    - dnsutils
+unbound_dependencies:
+  - dnsutils
 
-_unbound_environment_file:
-  default: /etc/default/unbound
-  debian: /etc/default/unbound
-  redhat: /etc/sysconfig/unbound
-
-_unbound_config_file:
-  default: "{{ unbound_conf_dir }}/unbound.conf.d"
-  debian: "{{ unbound_conf_dir }}/unbound.conf.d"
-  redhat: "{{ unbound_conf_dir }}"
-
-_unbound_flags: ''
-
-unbound_dependencies: "{{
-          _unbound_dependencies[ansible_os_family | lower~ '-' ~ ansible_distribution_major_version] |
-  default(_unbound_dependencies[ansible_os_family | lower] |
-  default(_unbound_dependencies[ansible_distribution | lower~ '-' ~ ansible_distribution_major_version] |
-  default(_unbound_dependencies[ansible_distribution | lower] |
-  default(_unbound_dependencies['default'])))) }}"
-
-unbound_environment_file: "{{
-          _unbound_environment_file[ansible_os_family | lower] |
-  default(_unbound_environment_file['default']) }}"
+unbound_environment_file: /etc/default/unbound
 
 unbound_config_server_defaults:
-  verbosity: 1
+  verbosity: 3
   statistics-interval: 240
-  use-syslog: "no"
+  use-syslog: "yes"
   log-queries: "yes"
-  logfile: /var/log/unbound.log
-  num-threads: 1
+  logfile: "" # /var/log/unbound.log
+  num-threads: 2
   directory: "/etc/unbound"
   username: "unbound"
   interface: 0.0.0.0

@@ -13,7 +13,6 @@ lint: |
 
 platforms:
   - name: instance
-    # docker pull ghcr.io/bodsch/docker-ansible/ansible-archlinux:latest
     image: "bodsch/ansible-${DISTRIBUTION:-debian:11}"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"

@@ -1,3 +1,4 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
 # {{ ansible_managed }}
 # server
 
@@ -17,11 +18,14 @@ server:
   local-data: {{ vv }}
 {% endfor %}
 {% else %}
+  {% if v | string | length > 0 %}
   {{ k }}: {{ v }}
+  {% endif %}
 {% endif %}
 {% endfor %}
 {% endif -%}
 
+{#
 # server:
 #        # whitespace is not necessary, but looks cleaner.
 #
@@ -801,4 +805,4 @@ server:
 #        # all domains are treated as being whitelisted.
 #        # ipsecmod-whitelist: "libreswan.org"
 #        # ipsecmod-whitelist: "nlnetlabs.nl"
-#
+#}

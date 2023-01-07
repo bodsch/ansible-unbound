@@ -4,6 +4,8 @@ unbound_group: unbound
 
 unbound_conf_dir: /etc/unbound
 
+unbound_chroot_dir: ""
+
 unbound_config_server: {}
 unbound_config_stub_zone: {}
 unbound_config_forward_zone: {}

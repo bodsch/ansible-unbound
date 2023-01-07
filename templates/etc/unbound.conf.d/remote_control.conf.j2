@@ -1,3 +1,4 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
 # {{ ansible_managed }}
 # remote_control
 
@@ -8,6 +9,7 @@ remote-control:
 {% endfor %}
 {% endif -%}
 
+{#
 # # Remote control config section.
 # remote-control:
 #         # Enable remote control with unbound-control(8) here.
@@ -38,3 +40,4 @@ remote-control:
 #
 #         # unbound-control certificate file.
 #         control-cert-file: "/etc/unbound/unbound_control.pem"
+#}
