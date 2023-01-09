@@ -13,4 +13,3 @@
     name: unbound
     enabled: true
     state: started
-
