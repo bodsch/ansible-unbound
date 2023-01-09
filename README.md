@@ -1,9 +1,11 @@
 
+# Ansible Role:  `unbound`
+
+
 install and configure [unbound](https://www.nlnetlabs.nl/projects/unbound/about/)
 
 
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-unbound/main.yml?branch=main)][ci]
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bodsch/ansible-unbound/CI/master)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-unbound)][issues]
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/bodsch/ansible-unbound)][releases]
 [![Ansible Quality Score](https://img.shields.io/ansible/quality/50067?label=role%20quality)][quality]
@@ -119,8 +121,6 @@ unbound_config_defaults:
 
   cachedb: {}
 ```
-
-
 
 
 ---
