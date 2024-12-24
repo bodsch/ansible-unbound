@@ -4,6 +4,12 @@
 
 install and configure [unbound](https://www.nlnetlabs.nl/projects/unbound/about/)
 
+---
+
+> Further development of this Ansible role has been moved to Collection [bodsch.dns](https://github.com/bodsch/ansible-collection-dns).
+> **This repository will therefore no longer be actively maintained.**
+
+---
 
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-unbound/main.yml?branch=main)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-unbound)][issues]
